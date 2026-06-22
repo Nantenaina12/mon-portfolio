@@ -1,12 +1,16 @@
-[
-  {
-    "year": "2024",
-    "title": "Début du développement",
-    "description": "Premiers pas avec React"
-  },
+[ {
+    "year":"2024",
+    "title":"Validé le DEUST",
+    "description":"C'est un diplôme qui prouve la validation des deux années du tronc commun de la spécialté MIP(Mathématique-Informatique-Physique)"
+ },
   {
     "year": "2025",
-    "title": "Projets professionnels",
-    "description": "Création d'applications complexes"
+    "title": "1ère Année du cycle ingénieur",
+    "description": "Prérequis en Mathematique, Informatique, Physique, Information géographique, Réseaux informatiques "
+  },
+  {
+    "year": "2026",
+    "title": "2ème Année du cycle ingénieur",
+    "description": "Acquisition, Traitement ,Stockage ,Analyse et Restitution des données géographiques"
   }
 ]
