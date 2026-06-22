@@ -1,8 +1,9 @@
+import { Link } from 'react-router-dom'
+
 export default function ProjectCard({ project }) {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-      {/* Zone de l'image modifiée */}
-      <div className="h-48 w-full bg-gray-200 flex items-center justify-center overflow-hidden">
+         <div className="h-48 w-full bg-gray-200 flex items-center justify-center overflow-hidden">
         {project.image ? (
           <img 
             src={project.image} 
@@ -13,6 +14,7 @@ export default function ProjectCard({ project }) {
           <span className="text-gray-400">Aucune image</span>
         )}
       </div>
+      
       <div className="p-4">
         <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
         <p className="text-gray-600 text-sm mb-3">{project.description}</p>
@@ -23,16 +25,12 @@ export default function ProjectCard({ project }) {
             </span>
           ))}
         </div>
-        {project.link && (
-          <a 
-            href={project.link} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-blue-500 hover:text-blue-700 text-sm font-medium"
-          >
-            Voir le projet →
-          </a>
-        )}
+        <Link 
+          to={`/project/${project.id}`}
+          className="text-blue-500 hover:text-blue-700 text-sm font-medium inline-block"
+        >
+          Voir les détails →
+        </Link>
       </div>
     </div>
   )

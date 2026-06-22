@@ -4,17 +4,68 @@
     "title": "Météo en ligne",
     "description": "C'est une interface qui offre des paramtères météorologiques selon la ville chosisie par l'utilisateur",
     "tags": ["Vite", "Tailwind"],
-    "image": "images/meteo.jpg",
+    "image": "/images/meteo.jpg",
     "link": "https://nantenaina12.github.io/meteo-vite/",
-    "coordinates": [0, 0]
+    "coordinates": [51.504,-0.1345 ],
+    "detailedDescription": "Description complète et détaillée du projet. Explique le contexte, les défis rencontrés et les solutions apportées.",
+    "objectives": [
+      "Créer une application responsive",
+      "Apprendre React et Tailwind",
+      "Mettre en place une architecture modulaire"
+    ]
   },
    {
+    "id": 2,
+    "title": "Cartographie Numérique",
+    "description": "Atlas thématique de la région Rabat Salé Kénitra ",
+    "detailedDescription": "Cet atlas thématique porte sur l’analyse des inégalités socio-économiques et des dynamiques territoriales dans la région de Rabat-Salé-Kénitra, à partir des données récentes du RGPH 2024, du CEE 2024 et de l’Indice de Pauvreté Multidimensionnelle (MPI 2024).",
+    "tags": ["PhilCarto", "QGIS"],
+    "image": "/images/carto.png",
+    "objectives": [
+      "Etudier les inégalités démographiques ",
+      "Identifier les facteurs économiques qui expliquent les disparités entre les provinces",
+      "Ressortir les différentes classes de provinces"
+    ]
+  },
+  {
     "id": 2,
     "title": "Projet Full Stack",
     "description": "Application complète avec Node.js",
     "tags": ["React", "Node.js"],
     "image": "/images/projet2.jpg",
     "link": "https://monfullstack.com",
-    "coordinates": [51.5074, -0.1278]
+    "coordinates": [49.0128,2.5500]
+  },{
+    "id": 2,
+    "title": "Projet Full Stack",
+    "description": "Application complète avec Node.js",
+    "tags": ["React", "Node.js"],
+    "image": "/images/projet2.jpg",
+    "link": "https://monfullstack.com",
+    "coordinates": [49.0128,2.5500]
+  },{
+    "id": 2,
+    "title": "Projet Full Stack",
+    "description": "Application complète avec Node.js",
+    "tags": ["React", "Node.js"],
+    "image": "/images/projet2.jpg",
+    "link": "https://monfullstack.com",
+    "coordinates": [49.0128,2.5500]
+  },{
+    "id": 2,
+    "title": "Projet Full Stack",
+    "description": "Application complète avec Node.js",
+    "tags": ["React", "Node.js"],
+    "image": "/images/projet2.jpg",
+    "link": "https://monfullstack.com",
+    "coordinates": [49.0128,2.5500]
+  },{
+    "id": 2,
+    "title": "Projet Full Stack",
+    "description": "Application complète avec Node.js",
+    "tags": ["React", "Node.js"],
+    "image": "/images/projet2.jpg",
+    "link": "https://monfullstack.com",
+    "coordinates": [49.0128,2.5500]
   }
 ]
