@@ -3,10 +3,9 @@
     "id": 1,
     "title": "Météo en ligne",
     "description": "C'est une interface qui offre des paramtères météorologiques selon la ville chosisie par l'utilisateur",
-    "tags": ["Vite", "Tailwind"],
+    "tags": ["HTML", "JS","CSS"],
     "image": "/images/meteo.jpg",
     "link": "https://nantenaina12.github.io/meteo-vite/",
-    "coordinates": [51.504,-0.1345 ],
     "detailedDescription": "Description complète et détaillée du projet. Explique le contexte, les défis rencontrés et les solutions apportées.",
     "objectives": [
       "Créer une application responsive",
@@ -28,44 +27,25 @@
     ]
   },
   {
-    "id": 2,
-    "title": "Projet Full Stack",
-    "description": "Application complète avec Node.js",
-    "tags": ["React", "Node.js"],
-    "image": "/images/projet2.jpg",
-    "link": "https://monfullstack.com",
-    "coordinates": [49.0128,2.5500]
-  },{
-    "id": 2,
-    "title": "Projet Full Stack",
-    "description": "Application complète avec Node.js",
-    "tags": ["React", "Node.js"],
-    "image": "/images/projet2.jpg",
-    "link": "https://monfullstack.com",
-    "coordinates": [49.0128,2.5500]
-  },{
-    "id": 2,
-    "title": "Projet Full Stack",
-    "description": "Application complète avec Node.js",
-    "tags": ["React", "Node.js"],
-    "image": "/images/projet2.jpg",
-    "link": "https://monfullstack.com",
-    "coordinates": [49.0128,2.5500]
-  },{
-    "id": 2,
-    "title": "Projet Full Stack",
-    "description": "Application complète avec Node.js",
-    "tags": ["React", "Node.js"],
-    "image": "/images/projet2.jpg",
-    "link": "https://monfullstack.com",
-    "coordinates": [49.0128,2.5500]
-  },{
-    "id": 2,
-    "title": "Projet Full Stack",
-    "description": "Application complète avec Node.js",
-    "tags": ["React", "Node.js"],
-    "image": "/images/projet2.jpg",
-    "link": "https://monfullstack.com",
-    "coordinates": [49.0128,2.5500]
+    "id": 3,
+    "title": "Animation du NDVI et des précipitations",
+    "description": "C'est une animation qui suit la santé de la végétation selon la saison des pluies",
+    "tags": ["Télédétection optique", "DE Africa","CHIRPS"],
+    "image": "/images/ndvi.png",
+    "objectives": [
+      "Calculer le NDVI à partir d'images Sentinel-2 pour quantifier l'activité de la végétation",
+      "Analyser les précipitations via CHIRPS pour caractériser les cycles pluviométriques",
+      "Créer une animation dynamique pour visualiser la corrélation pluie-végétation"
+    ]
+  },
+  {
+    "id":4,
+    "title": "Pomodoro-Timer",
+    "description": "Chronomètre en ligne",
+    "tags": ["HTML", "CSS","JS"],
+    "image": "/images/chrono.png",
+    "link":"https://nantenaina12.github.io/pomodoro/"
+
   }
+
 ]
