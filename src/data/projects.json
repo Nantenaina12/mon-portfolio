@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "title": "Mon premier projet",
+    "description": "Description courte du projet",
+    "tags": ["React", "Tailwind"],
+    "image": "/images/projet1.jpg",
+    "link": "https://monprojet.com",
+    "coordinates": [0, 0]
+  }
+]
