@@ -7,5 +7,14 @@
     "image": "images/meteo.jpg",
     "link": "https://nantenaina12.github.io/meteo-vite/",
     "coordinates": [0, 0]
+  },
+   {
+    "id": 2,
+    "title": "Projet Full Stack",
+    "description": "Application complète avec Node.js",
+    "tags": ["React", "Node.js"],
+    "image": "/images/projet2.jpg",
+    "link": "https://monfullstack.com",
+    "coordinates": [51.5074, -0.1278]
   }
 ]
