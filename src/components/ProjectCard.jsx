@@ -1,9 +1,17 @@
 export default function ProjectCard({ project }) {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-      <div className="h-48 bg-gray-200 flex items-center justify-center">
-        {/* Placeholder pour l'image */}
-        <span className="text-gray-400">Image du projet</span>
+      {/* Zone de l'image modifiée */}
+      <div className="h-48 w-full bg-gray-200 flex items-center justify-center overflow-hidden">
+        {project.image ? (
+          <img 
+            src={project.image} 
+            alt={project.title} 
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <span className="text-gray-400">Aucune image</span>
+        )}
       </div>
       <div className="p-4">
         <h3 className="text-xl font-semibold mb-2">{project.title}</h3>

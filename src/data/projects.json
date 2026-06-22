@@ -1,11 +1,11 @@
 [
   {
     "id": 1,
-    "title": "Mon premier projet",
-    "description": "Description courte du projet",
-    "tags": ["React", "Tailwind"],
-    "image": "/images/projet1.jpg",
-    "link": "https://monprojet.com",
+    "title": "Météo en ligne",
+    "description": "C'est une interface qui offre des paramtères météorologiques selon la ville chosisie par l'utilisateur",
+    "tags": ["Vite", "Tailwind"],
+    "image": "images/meteo.jpg",
+    "link": "https://nantenaina12.github.io/meteo-vite/",
     "coordinates": [0, 0]
   }
 ]
