@@ -13,8 +13,17 @@
       "Mettre en place une architecture modulaire"
     ]
   },
+  {
+    "id":2,
+    "title": "Pomodoro-Timer",
+    "description": "Chronomètre en ligne",
+    "tags": ["HTML", "CSS","JS"],
+    "image": "/images/chrono.png",
+    "link":"https://nantenaina12.github.io/pomodoro/"
+
+  },
    {
-    "id": 2,
+    "id": 3,
     "title": "Cartographie Numérique",
     "description": "Atlas thématique de la région Rabat Salé Kénitra ",
     "detailedDescription": "Cet atlas thématique porte sur l’analyse des inégalités socio-économiques et des dynamiques territoriales dans la région de Rabat-Salé-Kénitra, à partir des données récentes du RGPH 2024, du CEE 2024 et de l’Indice de Pauvreté Multidimensionnelle (MPI 2024).",
@@ -27,9 +36,9 @@
     ]
   },
   {
-    "id": 3,
+    "id": 4,
     "title": "Animation du NDVI et des précipitations",
-    "description": "C'est une animation qui suit la santé de la végétation selon la saison des pluies",
+    "description": "C'est une animation qui suit la santé de la végétation selon la saison de l'année",
     "tags": ["Télédétection optique", "DE Africa","CHIRPS"],
     "image": "/images/ndvi.png",
     "objectives": [
@@ -37,14 +46,30 @@
       "Analyser les précipitations via CHIRPS pour caractériser les cycles pluviométriques",
       "Créer une animation dynamique pour visualiser la corrélation pluie-végétation"
     ]
+  },{
+    "id":5,
+    "title": "Plugin de Requêtes Spatiales",
+    "description": "C'est outil automatisé qui se charge des couches vectorielles, effectue les opértaions sur leur entités et leur géométries ",
+    "tags": ["Python", "PyGIS"],
+    "image": "/images/vecteur.png",
+    "link":"https://github.com/Nantenaina12/Analyse_vectorielle",
+    "objectives": [
+      "Afficher la table attributaire et faire le filtrage",
+      "Effectuer une requête attributaire et spatiale",
+      "Calculer la surface de chaque entité et les autres opérations et exporter les résultats en csv"
+    ]
+
   },
   {
-    "id":4,
-    "title": "Pomodoro-Timer",
-    "description": "Chronomètre en ligne",
-    "tags": ["HTML", "CSS","JS"],
-    "image": "/images/chrono.png",
-    "link":"https://nantenaina12.github.io/pomodoro/"
+    "id":6,
+    "title": "Cartographie d'occupation du sol d'Agadir en 2023",
+    "description": "Une cartographie d'occupation du sol obtenue par la classification suppervisée de Random Forest apres avoir choisi les pixels d'entraînements, une image satellite LandSat 9 a été utilisée lors de ce projet  ",
+    "tags": ["Python", "QGIS","Random Forest"],
+    "image": "/images/occup.png",
+    "objectives": [
+      "Identifier les objets qui se trouvent sur la ville en utilsant l'algorithme de Random Forest",
+      "Rassembler les objects ayant les pixels proches dans une classe"
+    ]
 
   }
 

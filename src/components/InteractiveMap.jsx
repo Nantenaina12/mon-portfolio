@@ -14,10 +14,6 @@ export default function InteractiveMap() {
             <p className="text-gray-600 mb-4">
               🗺️ Aucun projet avec coordonnées pour l'instant
             </p>
-            <p className="text-sm text-gray-500">
-              Pour ajouter une carte interactive, ajoute des coordonnées GPS dans <br />
-              <code className="bg-gray-100 px-2 py-1 rounded">src/data/projects.json</code>
-            </p>
             <div className="mt-4 text-sm text-gray-400">
               Exemple : "coordinates": [48.8566, 2.3522] pour Paris
             </div>
