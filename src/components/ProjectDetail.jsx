@@ -1,5 +1,15 @@
 import { useParams, Link } from 'react-router-dom'
 import projectsData from '../data/projects.json'
+import { carto, chrono,vecteur,ndvi,occup,meteo } from '../assets/images'
+
+const images = {
+  carto: carto,
+  chrono:chrono,
+  vecteur: vecteur,
+  ndvi: ndvi,
+  occup: occup,
+  meteo: meteo
+}
 
 export default function ProjectDetail() {
   const { id } = useParams()
@@ -26,19 +36,18 @@ export default function ProjectDetail() {
         </Link>
         
         <div className="bg-white rounded-lg shadow-xl overflow-hidden">
-          {/* Image principale */}
-          <div className="h-48 w-full bg-gray-200 flex items-center justify-center overflow-hidden">
-        {project.image ? (
+          <div className="h-48 bg-gray-200 flex items-center justify-center">
+        {project.imageName && images[project.imageName] ? (
           <img 
-            src={project.image} 
-            alt={project.title} 
+            src={images[project.imageName]} 
+            alt={project.title}
             className="w-full h-full object-cover"
           />
         ) : (
-          <span className="text-gray-400">Aucune image</span>
+          <span className="text-gray-400">Image du projet</span>
         )}
       </div>
-          
+        
           <div className="p-8">
             <h1 className="text-3xl font-bold mb-4">{project.title}</h1>
             

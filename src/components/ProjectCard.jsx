@@ -1,17 +1,27 @@
 import { Link } from 'react-router-dom'
+import { carto, chrono,vecteur,ndvi,occup,meteo } from '../assets/images'
+
+const images = {
+  carto: carto,
+  chrono:chrono,
+  vecteur: vecteur,
+  ndvi: ndvi,
+  occup: occup,
+  meteo: meteo
+}
 
 export default function ProjectCard({ project }) {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
-         <div className="h-48 w-full bg-gray-200 flex items-center justify-center overflow-hidden">
-        {project.image ? (
+        <div className="h-48 bg-gray-200 flex items-center justify-center">
+        {project.imageName && images[project.imageName] ? (
           <img 
-            src={project.image} 
-            alt={project.title} 
+            src={images[project.imageName]} 
+            alt={project.title}
             className="w-full h-full object-cover"
           />
         ) : (
-          <span className="text-gray-400">Aucune image</span>
+          <span className="text-gray-400">Image du projet</span>
         )}
       </div>
       
