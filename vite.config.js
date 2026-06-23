@@ -7,4 +7,5 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  base: '/mon-portfolio/' // Remplace "mon-portfolio" par le nom de ton repo GitHub
 })
