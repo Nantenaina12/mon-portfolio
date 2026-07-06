@@ -4,12 +4,12 @@ export default function InteractiveMap() {
   const projectsWithCoords = projectsData.filter(p => p.coordinates && p.coordinates[0] !== 0)
   
   return (
-    <section className="py-16 px-4 bg-white dark:bg-gray-900" id="carte">
+    <section className="py-16 px-4 bg-white dark:bg-gray-900 pt-20 md:pt-16" id="carte">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white">Localisation de mes projets</h2>
         
         {projectsWithCoords.length === 0 ? (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center border border-gray-200 dark:border-gray-700">
             <p className="text-gray-600 dark:text-gray-400 mb-4">
               🗺️ Aucun projet avec coordonnées pour l'instant
             </p>
@@ -20,7 +20,7 @@ export default function InteractiveMap() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {projectsWithCoords.map((project) => (
-              <div key={project.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+              <div key={project.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 border border-gray-200 dark:border-gray-700">
                 <div className="flex items-start gap-3">
                   <div className="w-3 h-3 bg-red-500 dark:bg-red-400 rounded-full mt-2 flex-shrink-0"></div>
                   <div>

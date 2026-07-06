@@ -1,0 +1,181 @@
+/* Navigation - Styles du menu burger */
+
+/* Conteneur du menu burger */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 8px;
+  background: none;
+  border: none;
+  z-index: 60;
+}
+
+.menu-toggle span {
+  display: block;
+  width: 28px;
+  height: 3px;
+  background-color: #374151;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+/* Mode sombre */
+.dark .menu-toggle span {
+  background-color: #e5e7eb;
+}
+
+/* Animation du burger vers X */
+.menu-toggle.open span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 6px);
+}
+
+.menu-toggle.open span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.menu-toggle.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -6px);
+}
+
+/* Overlay du menu */
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 40;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.menu-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Menu latéral (tiroir) */
+.side-menu {
+  position: fixed;
+  top: 0;
+  right: -320px;
+  width: 280px;
+  height: 100vh;
+  background-color: #ffffff;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 80px 24px 24px;
+  overflow-y: auto;
+}
+
+/* Mode sombre */
+.dark .side-menu {
+  background-color: #1f2937;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.4);
+}
+
+.side-menu.open {
+  right: 0;
+}
+
+/* Éléments du menu */
+.side-menu .menu-item {
+  display: block;
+  width: 100%;
+  padding: 14px 16px;
+  color: #374151;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dark .side-menu .menu-item {
+  color: #e5e7eb;
+}
+
+.side-menu .menu-item:hover {
+  background-color: #f3f4f6;
+  color: #3b82f6;
+}
+
+.dark .side-menu .menu-item:hover {
+  background-color: #374151;
+  color: #60a5fa;
+}
+
+.side-menu .menu-item:active {
+  transform: scale(0.97);
+}
+
+/* Séparateur dans le menu */
+.side-menu .menu-divider {
+  height: 1px;
+  background-color: #e5e7eb;
+  margin: 8px 0;
+}
+
+.dark .side-menu .menu-divider {
+  background-color: #374151;
+}
+
+/* Version desktop */
+@media (min-width: 768px) {
+  .menu-toggle {
+    display: none !important;
+  }
+  
+  .menu-overlay,
+  .side-menu {
+    display: none !important;
+  }
+}
+
+/* Version mobile/tablette */
+@media (max-width: 767px) {
+  .desktop-menu {
+    display: none !important;
+  }
+  
+  .menu-toggle {
+    display: flex !important;
+  }
+}
+
+/* Animation d'entrée des éléments du menu */
+.side-menu .menu-item {
+  opacity: 0;
+  transform: translateX(20px);
+  animation: slideInItem 0.3s ease forwards;
+}
+
+.side-menu .menu-item:nth-child(1) { animation-delay: 0.05s; }
+.side-menu .menu-item:nth-child(2) { animation-delay: 0.10s; }
+.side-menu .menu-item:nth-child(3) { animation-delay: 0.15s; }
+.side-menu .menu-item:nth-child(4) { animation-delay: 0.20s; }
+.side-menu .menu-item:nth-child(5) { animation-delay: 0.25s; }
+
+@keyframes slideInItem {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Empêcher le scroll quand le menu est ouvert */
+body.menu-open {
+  overflow: hidden;
+}

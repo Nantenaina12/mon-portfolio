@@ -1,4 +1,5 @@
 import { useParams, Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import projectsData from '../data/projects.json'
 import { carto, chrono, vecteur, ndvi, occup, meteo } from '../assets/images'
 
@@ -17,21 +18,32 @@ export default function ProjectDetail() {
 
   if (!project) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+      <motion.div 
+        className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 pt-24 md:pt-20"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
         <div className="text-center">
           <h2 className="text-2xl font-bold text-red-600 dark:text-red-400">Projet non trouvé</h2>
           <Link to="/" className="text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mt-4 inline-block">
             ← Retour à l'accueil
           </Link>
         </div>
-      </div>
+      </motion.div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4">
+    <motion.div 
+      className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 pt-20"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="max-w-4xl mx-auto">
-        <Link to="/" className="text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mb-6 mt-11 inline-block">
+        <Link to="/" className="text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mb-6 inline-block">
           ← Retour aux projets
         </Link>
         
@@ -90,6 +102,6 @@ export default function ProjectDetail() {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }

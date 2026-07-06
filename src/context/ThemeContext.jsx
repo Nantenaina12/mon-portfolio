@@ -4,19 +4,26 @@ const ThemeContext = createContext()
 
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
-    // Récupérer le thème sauvegardé ou détecter la préférence système
     const saved = localStorage.getItem('theme')
     if (saved) return saved
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
   })
 
   useEffect(() => {
-    // Appliquer le thème au document
+    // ✅ IMPORTANT : Ajouter/retirer la classe sur html ET body
+    const htmlElement = document.documentElement
+    const bodyElement = document.body
+    
     if (theme === 'dark') {
-      document.documentElement.classList.add('dark')
+      htmlElement.classList.add('dark')
+      bodyElement.classList.add('dark')
+      bodyElement.style.backgroundColor = '#111827'  // Force le fond
     } else {
-      document.documentElement.classList.remove('dark')
+      htmlElement.classList.remove('dark')
+      bodyElement.classList.remove('dark')
+      bodyElement.style.backgroundColor = '#ffffff'
     }
+    
     localStorage.setItem('theme', theme)
   }, [theme])
 
