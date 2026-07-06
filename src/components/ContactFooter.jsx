@@ -2,7 +2,7 @@ import { config } from "../data/config"
 
 export default function ContactFooter() {
   return (
-    <footer className="bg-gray-800 text-white py-12 px-4" id="contact">
+    <footer className="bg-gray-800 dark:bg-gray-900 text-white py-12 px-4" id="contact">
       <div className="max-w-4xl mx-auto text-center">
         <h2 className="text-3xl font-bold mb-6">Me Contacter</h2>
         <div className="flex flex-wrap justify-center gap-6">
