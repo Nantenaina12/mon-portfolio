@@ -16,36 +16,38 @@ export default function ContactFooter() {
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setStatus({ type: '', message: '' })
+const handleSubmit = async (e) => {
+  e.preventDefault()
+  setLoading(true)
+  setStatus({ type: '', message: '' })
 
-    try {
-      const response = await fetch('http://localhost:8000/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
+  try {
+    const response = await fetch('http://localhost:8000/messages', { // ← modifié
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: formData.name,
+        email: formData.email,
+        subject: formData.subject,
+        content: formData.message  // ← mappé sur content
       })
+    })
 
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.detail || 'Erreur lors de l\'envoi')
-      }
-
-      const data = await response.json()
-      setStatus({ type: 'success', message: '✅ Votre message a été envoyé avec succès !' })
-      // Réinitialiser le formulaire
-      setFormData({ name: '', email: '', subject: '', message: '' })
-    } catch (error) {
-      console.error('Erreur:', error)
-      setStatus({ type: 'error', message: `❌ ${error.message || 'Une erreur est survenue'}` })
-    } finally {
-      setLoading(false)
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.detail || 'Erreur lors de l\'envoi')
     }
+
+    const data = await response.json()
+    setStatus({ type: 'success', message: '✅ Votre message a été envoyé avec succès !' })
+    setFormData({ name: '', email: '', subject: '', message: '' })
+  } catch (error) {
+    console.error('Erreur:', error)
+    setStatus({ type: 'error', message: `❌ ${error.message || 'Une erreur est survenue'}` })
+  } finally {
+    setLoading(false)
   }
+}
 
   return (
     <footer className="bg-gray-800 dark:bg-gray-900 text-white py-12 px-4" id="contact">
