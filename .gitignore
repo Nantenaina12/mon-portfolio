@@ -5,6 +5,7 @@ backend/*.pyc
 backend/.env
 backend/.env.local
 backend/.env.*.local
+backend/render.yaml
 
 # === Node / Frontend ===
 frontend/node_modules/
