@@ -2,26 +2,36 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { config } from '../data/config'
 import { useTheme } from '../context/ThemeContext'
-import './Navigation.css'  // ← AJOUTER CETTE LIGNE
+import './Navigation.css' 
 
 export default function Navigation() {
   const navigate = useNavigate()
   const { theme, toggleTheme } = useTheme()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   
+  // Liste des sections mise à jour avec la route d'administration 🔐
   const sections = [
     { id: "projets", label: "Projets" },
     { id: "carte", label: "Carte" },
     { id: "parcours", label: "Parcours" },
-    { id: "contact", label: "Contact" }
+    { id: "contact", label: "Contact" },
+    { id: "admin", label: "🔐 Admin", path: "/admin" } // ⭐ AJOUT
   ]
 
-  // Fermer le menu quand on clique sur un lien
-  const handleNavigation = (sectionId) => {
+  // Gestion de la navigation mixte (Ancre de défilement VS Redirection de page)
+  const handleNavigation = (section) => {
     setIsMenuOpen(false)
+
+    // Si la section possède un chemin (comme /admin), on redirige directement
+    if (section.path) {
+      navigate(section.path)
+      return
+    }
+
+    // Sinon, on retourne à l'accueil et on scrolle vers l'élément ciblé
     navigate('/')
     setTimeout(() => {
-      const element = document.getElementById(sectionId)
+      const element = document.getElementById(section.id)
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' })
       }
@@ -49,7 +59,7 @@ export default function Navigation() {
     return () => document.body.classList.remove('menu-open')
   }, [isMenuOpen])
 
-  // Toggle du menu
+  // Toggle du menu mobile
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
   }
@@ -72,7 +82,7 @@ export default function Navigation() {
             {sections.map((section) => (
               <button
                 key={section.id}
-                onClick={() => handleNavigation(section.id)}
+                onClick={() => handleNavigation(section)} // ⭐ Modifié : Envoi de l'objet complet
                 className="text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition text-sm font-medium"
               >
                 {section.label}
@@ -120,7 +130,7 @@ export default function Navigation() {
         onClick={() => setIsMenuOpen(false)}
       />
 
-      {/* Menu latéral (tiroir) */}
+      {/* Menu latéral (tiroir mobile) */}
       <div className={`side-menu ${isMenuOpen ? 'open' : ''}`}>
         {/* Nom dans le menu */}
         <div className="mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
@@ -128,11 +138,11 @@ export default function Navigation() {
           <p className="font-bold text-gray-900 dark:text-white">{config.name}</p>
         </div>
 
-        {/* Liens du menu */}
+        {/* Liens du menu mobile */}
         {sections.map((section) => (
           <button
             key={section.id}
-            onClick={() => handleNavigation(section.id)}
+            onClick={() => handleNavigation(section)} // ⭐ Modifié : Envoi de l'objet complet
             className="menu-item"
           >
             {section.label}

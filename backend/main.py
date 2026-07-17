@@ -22,10 +22,16 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Portfolio API", version="1.0.0")
 
-# CORS
+# CORS - CORRIGÉ avec le port 5174
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://localhost:3000",
+        "http://localhost:8001",
+        "https://nantenaina12.github.io",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

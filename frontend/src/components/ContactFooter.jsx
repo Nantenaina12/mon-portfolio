@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { config } from "../data/config"
+import { sendContactMessage } from '../utils/api' // ⭐ UTILISATION DE L'API CENTRALISÉE
 
 export default function ContactFooter() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     subject: '',
-    message: ''
+    content: '' // ⚠️ Le backend attend "content", pas "message"
   })
   const [status, setStatus] = useState({ type: '', message: '' })
   const [loading, setLoading] = useState(false)
@@ -16,38 +17,31 @@ export default function ContactFooter() {
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-const handleSubmit = async (e) => {
-  e.preventDefault()
-  setLoading(true)
-  setStatus({ type: '', message: '' })
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setStatus({ type: '', message: '' })
 
-  try {
-    const response = await fetch('http://localhost:8000/messages', { // ← modifié
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: formData.name,
-        email: formData.email,
-        subject: formData.subject,
-        content: formData.message  // ← mappé sur content
+    try {
+      // ⭐ Appel de la fonction de l'API centralisée
+      await sendContactMessage(formData)
+      
+      setStatus({ 
+        type: 'success', 
+        message: '✅ Votre message a été envoyé avec succès !' 
       })
-    })
-
-    if (!response.ok) {
-      const errorData = await response.json()
-      throw new Error(errorData.detail || 'Erreur lors de l\'envoi')
+      // Réinitialisation avec la clé "content"
+      setFormData({ name: '', email: '', subject: '', content: '' })
+    } catch (error) {
+      console.error('Erreur:', error)
+      setStatus({ 
+        type: 'error', 
+        message: `❌ ${error.message || 'Une erreur est survenue'}` 
+      })
+    } finally {
+      setLoading(false)
     }
-
-    const data = await response.json()
-    setStatus({ type: 'success', message: '✅ Votre message a été envoyé avec succès !' })
-    setFormData({ name: '', email: '', subject: '', message: '' })
-  } catch (error) {
-    console.error('Erreur:', error)
-    setStatus({ type: 'error', message: `❌ ${error.message || 'Une erreur est survenue'}` })
-  } finally {
-    setLoading(false)
   }
-}
 
   return (
     <footer className="bg-gray-800 dark:bg-gray-900 text-white py-12 px-4" id="contact">
@@ -96,11 +90,11 @@ const handleSubmit = async (e) => {
             />
           </div>
           <div>
-            <label htmlFor="message" className="block text-sm font-medium mb-1">Message</label>
+            <label htmlFor="content" className="block text-sm font-medium mb-1">Message</label>
             <textarea
-              id="message"
-              name="message"
-              value={formData.message}
+              id="content"
+              name="content" // ⚠️ Changé de "message" à "content"
+              value={formData.content} // ⚠️ Liaison avec l'état local renommé
               onChange={handleChange}
               required
               rows="4"

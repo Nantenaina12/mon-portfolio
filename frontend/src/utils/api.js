@@ -1,5 +1,5 @@
 // Récupérer l'URL de l'API depuis les variables d'environnement
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 // Fonction pour faire des requêtes avec token
 export async function fetchWithAuth(endpoint, options = {}) {
@@ -48,7 +48,7 @@ export async function login(username, password) {
   formData.append('username', username);
   formData.append('password', password);
 
-  const response = await fetch(`${API_URL}/api/v1/auth/login`, {
+  const response = await fetch(`${API_URL}/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -65,7 +65,7 @@ export async function login(username, password) {
 }
 
 export async function getCurrentUser() {
-  return fetchWithAuth('/api/v1/auth/me');
+  return fetchWithAuth('/me');
 }
 
 export async function refreshAccessToken() {
@@ -73,7 +73,7 @@ export async function refreshAccessToken() {
   if (!refreshToken) return false;
 
   try {
-    const response = await fetch(`${API_URL}/api/v1/auth/refresh`, {
+    const response = await fetch(`${API_URL}/refresh`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -94,50 +94,50 @@ export async function refreshAccessToken() {
 
 // Messages
 export async function getMessages() {
-  return fetchWithAuth('/api/v1/messages/');
+  return fetchWithAuth('/messages');
 }
 
 export async function markMessageAsRead(messageId) {
-  return fetchWithAuth(`/api/v1/messages/${messageId}/read`, {
+  return fetchWithAuth(`/messages/${messageId}/read`, {
     method: 'PUT'
   });
 }
 
 export async function deleteMessage(messageId) {
-  return fetchWithAuth(`/api/v1/messages/${messageId}`, {
+  return fetchWithAuth(`/messages/${messageId}`, {
     method: 'DELETE'
   });
 }
 
 // Projets
 export async function getProjects() {
-  const response = await fetch(`${API_URL}/api/v1/projects/`);
+  const response = await fetch(`${API_URL}/projects`);
   return response.json();
 }
 
 export async function createProject(project) {
-  return fetchWithAuth('/api/v1/projects/', {
+  return fetchWithAuth('/projects', {
     method: 'POST',
     body: JSON.stringify(project)
   });
 }
 
 export async function updateProject(id, project) {
-  return fetchWithAuth(`/api/v1/projects/${id}`, {
+  return fetchWithAuth(`/projects/${id}`, {
     method: 'PUT',
     body: JSON.stringify(project)
   });
 }
 
 export async function deleteProject(id) {
-  return fetchWithAuth(`/api/v1/projects/${id}`, {
+  return fetchWithAuth(`/projects/${id}`, {
     method: 'DELETE'
   });
 }
 
 // Formulaire de contact (public)
 export async function sendContactMessage(data) {
-  const response = await fetch(`${API_URL}/api/v1/messages/`, {
+  const response = await fetch(`${API_URL}/messages`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

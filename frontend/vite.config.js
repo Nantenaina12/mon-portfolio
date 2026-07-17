@@ -7,5 +7,14 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  base: '/mon-portfolio/' // Remplace "mon-portfolio" par le nom de ton repo GitHub
+  base: '/mon-portfolio/', // Remplace "mon-portfolio" par le nom de ton repo GitHub
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8001',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 })
