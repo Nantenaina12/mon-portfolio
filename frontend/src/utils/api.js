@@ -135,6 +135,8 @@ export async function deleteProject(id) {
   });
 }
 
+// ... le reste du code ...
+
 // Formulaire de contact (public)
 export async function sendContactMessage(data) {
   const response = await fetch(`${API_URL}/messages`, {
@@ -146,8 +148,32 @@ export async function sendContactMessage(data) {
   });
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.detail || 'Erreur lors de l\'envoi');
+    let errorMessage = 'Erreur lors de l\'envoi';
+    
+    try {
+      const error = await response.json();
+      
+      // Gestion des erreurs de validation FastAPI (422)
+      if (response.status === 422 && error.detail) {
+        const errors = {};
+        error.detail.forEach(err => {
+          const field = err.loc.join('.');
+          errors[field] = err.msg;
+        });
+        // Throw avec un objet d'erreurs
+        throw new Error(JSON.stringify(errors));
+      } else if (error.detail) {
+        errorMessage = error.detail;
+      }
+    } catch (e) {
+      if (e.message.startsWith('{')) {
+        // C'est notre objet d'erreurs
+        throw new Error(e.message);
+      }
+      throw new Error(e.message || errorMessage);
+    }
+    
+    throw new Error(errorMessage);
   }
 
   return response.json();

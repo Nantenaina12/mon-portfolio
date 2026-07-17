@@ -4,6 +4,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from typing import List
 from datetime import timedelta
+from schemas import ChangeAdminPasswordRequest
 
 from database import engine, get_db
 from models import Base
@@ -204,3 +205,17 @@ def search(q: str = "", db: Session = Depends(get_db)):
 @app.get("/admin/messages", response_model=List[MessageResponse])
 def admin_messages(admin=Depends(get_current_admin_user), db: Session = Depends(get_db)):
     return crud.get_messages(db)
+
+#----------------ChangerMotdePasseAdmin-------------
+@app.post("/change-admin-password")
+def change_admin_password(
+    req: ChangeAdminPasswordRequest,
+    current_user=Depends(get_current_admin_user),  # Seul un admin peut changer le mot de passe
+    db: Session = Depends(get_db)
+):
+    """Change le mot de passe de l'admin connecté"""
+    user = crud.change_password(db, current_user.id, req.old_password, req.new_password)
+    if not user:
+        raise HTTPException(400, "Ancien mot de passe incorrect")
+    crud.update_refresh_token(db, user.id, None)
+    return {"message": "Mot de passe admin changé avec succès"}
