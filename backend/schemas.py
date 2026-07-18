@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field, EmailStr
 from typing import Optional, List
 from datetime import datetime
+from pydantic import field_validator
 
 # ---- Projects ----
 class ProjectBase(BaseModel):
@@ -10,6 +11,12 @@ class ProjectBase(BaseModel):
     image_url: Optional[str] = None
     github_url: Optional[str] = None
     live_url: Optional[str] = None
+    @field_validator('tags', mode='before')
+    @classmethod
+    def parse_tags(cls, v):
+        if isinstance(v, str):
+            return [tag.strip() for tag in v.split(',') if tag.strip()]
+        return v
 
 class ProjectCreate(ProjectBase):
     pass

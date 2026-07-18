@@ -4,6 +4,7 @@ from schemas import ProjectCreate, ProjectUpdate, MessageCreate, UserCreate
 from security import hash_password, verify_password
 import json
 import datetime
+from datetime import datetime  # <-- AJOUTER CETTE LIGNE en haut du fichier
 
 # ---- Projects ----
 def get_project(db: Session, project_id: int):
@@ -36,7 +37,7 @@ def update_project(db: Session, project_id: int, project: ProjectUpdate):
         db_project.image_url = project.image_url
         db_project.github_url = project.github_url
         db_project.live_url = project.live_url
-        db_project.updated_at = datetime.now()
+        db_project.updated_at = datetime.now()  # maintenant fonctionne
         db.commit()
         db.refresh(db_project)
     return db_project

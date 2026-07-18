@@ -1,3 +1,4 @@
+// frontend/src/components/ProjectCard.jsx
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { carto, chrono, vecteur, ndvi, occup, meteo } from '../assets/images'
@@ -39,7 +40,7 @@ export default function ProjectCard({ project, index }) {
         <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">{project.title}</h3>
         <p className="text-gray-600 dark:text-gray-300 text-sm mb-3">{project.description}</p>
         <div className="flex flex-wrap gap-2 mb-3">
-          {project.tags.map((tag, tagIndex) => (
+          {project.tags && project.tags.map((tag, tagIndex) => (
             <span key={tagIndex} className="bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 text-xs px-2 py-1 rounded-full">
               {tag}
             </span>

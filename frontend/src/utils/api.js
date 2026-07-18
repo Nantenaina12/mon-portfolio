@@ -1,7 +1,9 @@
-// Récupérer l'URL de l'API depuis les variables d'environnement
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
+// Récupérer l'URL de l'API
+// Avec le proxy, on utilise des chemins relatifs commençant par /api
+const API_URL = '';
 
-// Fonction pour faire des requêtes avec token
+// ========== FONCTIONS AVEC AUTH ==========
+
 export async function fetchWithAuth(endpoint, options = {}) {
   const token = localStorage.getItem('access_token');
   
@@ -14,19 +16,17 @@ export async function fetchWithAuth(endpoint, options = {}) {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_URL}${endpoint}`, {
+  const response = await fetch(`/api${endpoint}`, {
     ...options,
     headers
   });
 
-  // Si token expiré, essayer de rafraîchir
   if (response.status === 401) {
     const refreshed = await refreshAccessToken();
     if (refreshed) {
-      // Réessayer avec le nouveau token
       const newToken = localStorage.getItem('access_token');
       headers['Authorization'] = `Bearer ${newToken}`;
-      const retryResponse = await fetch(`${API_URL}${endpoint}`, {
+      const retryResponse = await fetch(`/api${endpoint}`, {
         ...options,
         headers
       });
@@ -42,13 +42,14 @@ export async function fetchWithAuth(endpoint, options = {}) {
   return response.json();
 }
 
-// Authentification
+// ========== AUTHENTIFICATION ==========
+
 export async function login(username, password) {
   const formData = new URLSearchParams();
   formData.append('username', username);
   formData.append('password', password);
 
-  const response = await fetch(`${API_URL}/login`, {
+  const response = await fetch('/api/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -73,7 +74,7 @@ export async function refreshAccessToken() {
   if (!refreshToken) return false;
 
   try {
-    const response = await fetch(`${API_URL}/refresh`, {
+    const response = await fetch('/api/refresh', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -92,7 +93,8 @@ export async function refreshAccessToken() {
   }
 }
 
-// Messages
+// ========== MESSAGES ==========
+
 export async function getMessages() {
   return fetchWithAuth('/messages');
 }
@@ -109,9 +111,13 @@ export async function deleteMessage(messageId) {
   });
 }
 
-// Projets
+// ========== PROJETS (CRUD) ==========
+
 export async function getProjects() {
-  const response = await fetch(`${API_URL}/projects`);
+  const response = await fetch('/api/projects');
+  if (!response.ok) {
+    throw new Error('Erreur lors du chargement des projets');
+  }
   return response.json();
 }
 
@@ -135,11 +141,10 @@ export async function deleteProject(id) {
   });
 }
 
-// ... le reste du code ...
+// ========== CONTACT (public) ==========
 
-// Formulaire de contact (public)
 export async function sendContactMessage(data) {
-  const response = await fetch(`${API_URL}/messages`, {
+  const response = await fetch('/api/messages', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -153,21 +158,18 @@ export async function sendContactMessage(data) {
     try {
       const error = await response.json();
       
-      // Gestion des erreurs de validation FastAPI (422)
       if (response.status === 422 && error.detail) {
         const errors = {};
         error.detail.forEach(err => {
           const field = err.loc.join('.');
           errors[field] = err.msg;
         });
-        // Throw avec un objet d'erreurs
         throw new Error(JSON.stringify(errors));
       } else if (error.detail) {
         errorMessage = error.detail;
       }
     } catch (e) {
       if (e.message.startsWith('{')) {
-        // C'est notre objet d'erreurs
         throw new Error(e.message);
       }
       throw new Error(e.message || errorMessage);
@@ -177,4 +179,16 @@ export async function sendContactMessage(data) {
   }
 
   return response.json();
+}
+
+// ========== ADMIN (Changer mot de passe) ==========
+
+export async function changeAdminPassword(oldPassword, newPassword) {
+  return fetchWithAuth('/change-admin-password', {
+    method: 'POST',
+    body: JSON.stringify({
+      old_password: oldPassword,
+      new_password: newPassword
+    })
+  });
 }

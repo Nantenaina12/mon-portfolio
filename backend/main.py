@@ -1,11 +1,14 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from typing import List
 from datetime import timedelta
 from schemas import ChangeAdminPasswordRequest
-
+from fastapi import File, UploadFile
+import logging
+from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles # Déjà importé
 from database import engine, get_db
 from models import Base
 import crud
@@ -37,6 +40,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# ⭐ AJOUT : Montage du dossier statique pour les images du portfolio
+# Il est placé ici pour bénéficier également de la configuration CORS
+app.mount("/images", StaticFiles(directory="static/images"), name="images")
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
@@ -219,3 +226,25 @@ def change_admin_password(
         raise HTTPException(400, "Ancien mot de passe incorrect")
     crud.update_refresh_token(db, user.id, None)
     return {"message": "Mot de passe admin changé avec succès"}
+
+@app.exception_handler(Exception)
+async def generic_exception_handler(request: Request, exc: Exception):
+    logging.error(f"Erreur interne: {exc}")
+    return JSONResponse(
+        status_code=500,
+        content={"detail": f"Erreur interne: {str(exc)}"}
+    )
+
+@app.post("/upload-image")
+async def upload_image(file: UploadFile = File(...)):
+    # Générer un nom unique
+    import uuid
+    extension = file.filename.split('.')[-1]
+    filename = f"{uuid.uuid4()}.{extension}"
+    file_path = f"static/images/{filename}"
+    
+    # Sauvegarder le fichier
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+    
+    return {"image_url": f"/images/{filename}"}

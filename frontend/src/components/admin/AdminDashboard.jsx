@@ -3,13 +3,16 @@ import { useAuth } from '../../context/AuthContext';
 import { getMessages, markMessageAsRead, deleteMessage } from '../../utils/api';
 import MessagesList from './MessagesList';
 import AdminStats from './AdminStats';
+import ChangePassword from './ChangePassword';
+import CreateProject from './CreateProject';
+import ProjectList from './ProjectList';
 
 export default function AdminDashboard() {
   const { user, logout } = useAuth();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [selectedTab, setSelectedTab] = useState('messages');
+  const [activeTab, setActiveTab] = useState('messages'); // messages | password | projects
 
   useEffect(() => {
     loadMessages();
@@ -26,6 +29,13 @@ export default function AdminDashboard() {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Petite fonction de rafraîchissement des projets (à lier si votre liste en a besoin)
+  const loadProjects = () => {
+    console.log("Les projets ont été actualisés.");
+    // Si votre composant ProjectList requiert un état partagé ou un re-fetch, 
+    // cette fonction peut être enrichie plus tard.
   };
 
   const handleMarkRead = async (id) => {
@@ -73,29 +83,86 @@ export default function AdminDashboard() {
         </div>
       </header>
 
-      {/* Statistiques */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <AdminStats 
-          total={messages.length}
-          unread={unreadCount}
-        />
+      {/* Onglets de navigation */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        <div className="flex gap-2 flex-wrap border-b border-gray-200 dark:border-gray-700">
+          <button
+            onClick={() => setActiveTab('messages')}
+            className={`px-4 py-2 text-sm font-medium transition ${
+              activeTab === 'messages' 
+                ? 'border-b-2 border-blue-600 text-blue-600 dark:text-blue-400' 
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+            }`}
+          >
+            📩 Messages
+          </button>
+          <button
+            onClick={() => setActiveTab('projects')}
+            className={`px-4 py-2 text-sm font-medium transition ${
+              activeTab === 'projects' 
+                ? 'border-b-2 border-blue-600 text-blue-600 dark:text-blue-400' 
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+            }`}
+          >
+            🚀 Projets
+          </button>
+          <button
+            onClick={() => setActiveTab('password')}
+            className={`px-4 py-2 text-sm font-medium transition ${
+              activeTab === 'password' 
+                ? 'border-b-2 border-blue-600 text-blue-600 dark:text-blue-400' 
+                : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+            }`}
+          >
+            🔐 Sécurité
+          </button>
+        </div>
       </div>
 
-      {/* Contenu principal */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-        {error && (
-          <div className="p-4 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg mb-6">
-            ❌ {error}
-          </div>
+      {/* Contenu des onglets */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* Onglet Messages */}
+        {activeTab === 'messages' && (
+          <>
+            <AdminStats 
+              total={messages.length}
+              unread={unreadCount}
+            />
+
+            {error && (
+              <div className="p-4 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg mb-6">
+                ❌ {error}
+              </div>
+            )}
+
+            <MessagesList 
+              messages={messages}
+              loading={loading}
+              onMarkRead={handleMarkRead}
+              onDelete={handleDelete}
+              onRefresh={loadMessages}
+            />
+          </>
         )}
 
-        <MessagesList 
-          messages={messages}
-          loading={loading}
-          onMarkRead={handleMarkRead}
-          onDelete={handleDelete}
-          onRefresh={loadMessages}
-        />
+        {/* Onglet Projets */}
+        {activeTab === 'projects' && (
+          <>
+            <CreateProject onProjectCreated={() => {
+              // Rafraîchir la liste après création
+              // On peut utiliser une référence ou un état partagé
+              // Pour simplifier, on force un rechargement via window.location.reload() ou on passe une callback
+            }} />
+            <div className="mt-8">
+              <ProjectList />
+            </div>
+          </>
+        )}
+
+        {/* Onglet Sécurité */}
+        {activeTab === 'password' && (
+          <ChangePassword />
+        )}
       </div>
     </div>
   );

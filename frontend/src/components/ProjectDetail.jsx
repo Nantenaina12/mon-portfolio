@@ -1,9 +1,11 @@
+// ProjectDetail.jsx
 import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import projectsData from '../data/projects.json'
+import { useState, useEffect } from 'react'
+import { getProjects } from '../utils/api' // ou une fonction getProjectById
 import { carto, chrono, vecteur, ndvi, occup, meteo } from '../assets/images'
 
-const images = {
+const localImages = {
   carto: carto,
   chrono: chrono,
   vecteur: vecteur,
@@ -14,24 +16,46 @@ const images = {
 
 export default function ProjectDetail() {
   const { id } = useParams()
-  const project = projectsData.find(p => p.id === parseInt(id))
+  const [project, setProject] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  if (!project) {
+  useEffect(() => {
+    const fetchProject = async () => {
+      try {
+        const projects = await getProjects()
+        const found = projects.find(p => p.id === parseInt(id))
+        if (!found) throw new Error('Projet non trouvé')
+        setProject(found)
+      } catch (err) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchProject()
+  }, [id])
+
+  if (loading) return <div>Chargement...</div>
+  if (error || !project) {
     return (
-      <motion.div 
-        className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 pt-24 md:pt-20"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      >
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-4 pt-24 md:pt-20">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-red-600 dark:text-red-400">Projet non trouvé</h2>
+          <h2 className="text-2xl font-bold text-red-600 dark:text-red-400">{error || 'Projet non trouvé'}</h2>
           <Link to="/" className="text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 mt-4 inline-block">
             ← Retour à l'accueil
           </Link>
         </div>
-      </motion.div>
+      </div>
     )
+  }
+
+  // Déterminer la source de l'image
+  let imageSrc = null;
+  if (project.image_url) {
+    imageSrc = project.image_url;
+  } else if (project.imageName && localImages[project.imageName]) {
+    imageSrc = localImages[project.imageName];
   }
 
   return (
@@ -49,9 +73,9 @@ export default function ProjectDetail() {
         
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden">
           <div className="h-64 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-            {project.imageName && images[project.imageName] ? (
+            {imageSrc ? (
               <img 
-                src={images[project.imageName]} 
+                src={imageSrc} 
                 alt={project.title}
                 className="w-full h-full object-cover"
               />
@@ -64,7 +88,7 @@ export default function ProjectDetail() {
             <h1 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">{project.title}</h1>
             
             <div className="flex flex-wrap gap-2 mb-6">
-              {project.tags.map((tag, index) => (
+              {project.tags?.map((tag, index) => (
                 <span key={index} className="bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 px-3 py-1 rounded-full text-sm">
                   {tag}
                 </span>
@@ -89,9 +113,9 @@ export default function ProjectDetail() {
               </div>
             )}
             
-            {project.link && (
+            {project.live_url && (
               <a 
-                href={project.link} 
+                href={project.live_url} 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="inline-block bg-blue-500 dark:bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-600 dark:hover:bg-blue-700 transition"
