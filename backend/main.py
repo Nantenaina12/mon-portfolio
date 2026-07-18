@@ -1,14 +1,18 @@
-from fastapi import FastAPI, Depends, HTTPException, status, Request
+from fastapi import FastAPI, Depends, HTTPException, status, Request, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from typing import List
 from datetime import timedelta
-from schemas import ChangeAdminPasswordRequest
-from fastapi import File, UploadFile
 import logging
-from fastapi.responses import JSONResponse
-from fastapi.staticfiles import StaticFiles # Déjà importé
+import os
+import shutil
+import uuid
+import json
+
+from schemas import ChangeAdminPasswordRequest
 from database import engine, get_db
 from models import Base
 import crud
@@ -21,12 +25,16 @@ from schemas import (
 from security import create_access_token, create_refresh_token, decode_token
 from config import settings
 
-# Créer les tables
-Base.metadata.create_all(bind=engine)
-
+# ========== 1. CRÉER L'APPLICATION ==========
 app = FastAPI(title="Portfolio API", version="1.0.0")
 
-# CORS - CORRIGÉ avec le port 5174
+# ========== 2. CRÉER LE DOSSIER STATIQUE ==========
+os.makedirs("static/images", exist_ok=True)
+
+# ========== 3. MONTER LE DOSSIER STATIQUE ==========
+app.mount("/images", StaticFiles(directory="static/images"), name="images")
+
+# ========== 4. CORS ==========
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -41,13 +49,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ⭐ AJOUT : Montage du dossier statique pour les images du portfolio
-# Il est placé ici pour bénéficier également de la configuration CORS
-app.mount("/images", StaticFiles(directory="static/images"), name="images")
+# ========== 5. CRÉER LES TABLES ==========
+Base.metadata.create_all(bind=engine)
 
+# ========== 6. OAUTH2 ==========
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
-# ------------------ Dépendances ------------------
+# ========== 7. GESTIONNAIRE D'ERREURS ==========
+@app.exception_handler(Exception)
+async def generic_exception_handler(request: Request, exc: Exception):
+    logging.error(f"Erreur interne: {exc}")
+    return JSONResponse(
+        status_code=500,
+        content={"detail": f"Erreur interne: {str(exc)}"}
+    )
+
+# ========== 8. DÉPENDANCES ==========
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     payload = decode_token(token)
     username = payload.get("sub")
@@ -63,7 +80,7 @@ def get_current_admin_user(current_user=Depends(get_current_user)):
         raise HTTPException(status_code=403, detail="Accès admin requis")
     return current_user
 
-# ------------------ Routes publiques ------------------
+# ========== 9. ROUTES ==========
 @app.get("/")
 def root():
     return {"message": "Portfolio API avec PostgreSQL", "docs": "/docs"}
@@ -127,7 +144,7 @@ def change_password(req: ChangePasswordRequest, current_user=Depends(get_current
 def me(current_user=Depends(get_current_user)):
     return current_user
 
-# ------------------ Projets (protégés) ------------------
+# ------------------ Projets ------------------
 @app.post("/projects", response_model=ProjectResponse, status_code=201)
 def create_project(project: ProjectCreate, current_user=Depends(get_current_user), db: Session = Depends(get_db)):
     return crud.create_project(db, project)
@@ -137,7 +154,6 @@ def get_projects(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     projects = crud.get_projects(db, skip, limit)
     for p in projects:
         if p.tags:
-            import json
             p.tags = json.loads(p.tags)
     return projects
 
@@ -147,7 +163,6 @@ def get_project(project_id: int, db: Session = Depends(get_db)):
     if not project:
         raise HTTPException(404, "Projet non trouvé")
     if project.tags:
-        import json
         project.tags = json.loads(project.tags)
     return project
 
@@ -165,7 +180,7 @@ def delete_project(project_id: int, current_user=Depends(get_current_user), db: 
         raise HTTPException(404, "Projet non trouvé")
     return {"message": f"Projet {project_id} supprimé"}
 
-# ------------------ Messages (public pour POST, protégé pour lecture) ------------------
+# ------------------ Messages ------------------
 @app.post("/messages", response_model=MessageResponse, status_code=201)
 def create_message(message: MessageCreate, db: Session = Depends(get_db)):
     return crud.create_message(db, message)
@@ -185,14 +200,13 @@ def mark_read(message_id: int, admin=Depends(get_current_admin_user), db: Sessio
         raise HTTPException(404, "Message non trouvé")
     return msg
 
-# ------------------ Tags ------------------
+# ------------------ Tags et recherche ------------------
 @app.get("/tags")
 def get_all_tags(db: Session = Depends(get_db)):
     projects = crud.get_projects(db)
     all_tags = set()
     for p in projects:
         if p.tags:
-            import json
             all_tags.update(json.loads(p.tags))
     return {"tags": sorted(list(all_tags))}
 
@@ -203,7 +217,6 @@ def search(q: str = "", db: Session = Depends(get_db)):
     for p in projects:
         if q.lower() in p.title.lower() or q.lower() in p.description.lower():
             if p.tags:
-                import json
                 p.tags = json.loads(p.tags)
             results.append(p)
     return {"query": q, "results": results, "total": len(results)}
@@ -213,38 +226,24 @@ def search(q: str = "", db: Session = Depends(get_db)):
 def admin_messages(admin=Depends(get_current_admin_user), db: Session = Depends(get_db)):
     return crud.get_messages(db)
 
-#----------------ChangerMotdePasseAdmin-------------
 @app.post("/change-admin-password")
 def change_admin_password(
     req: ChangeAdminPasswordRequest,
-    current_user=Depends(get_current_admin_user),  # Seul un admin peut changer le mot de passe
+    current_user=Depends(get_current_admin_user),
     db: Session = Depends(get_db)
 ):
-    """Change le mot de passe de l'admin connecté"""
     user = crud.change_password(db, current_user.id, req.old_password, req.new_password)
     if not user:
         raise HTTPException(400, "Ancien mot de passe incorrect")
     crud.update_refresh_token(db, user.id, None)
     return {"message": "Mot de passe admin changé avec succès"}
 
-@app.exception_handler(Exception)
-async def generic_exception_handler(request: Request, exc: Exception):
-    logging.error(f"Erreur interne: {exc}")
-    return JSONResponse(
-        status_code=500,
-        content={"detail": f"Erreur interne: {str(exc)}"}
-    )
-
+# ------------------ Upload d'image ------------------
 @app.post("/upload-image")
 async def upload_image(file: UploadFile = File(...)):
-    # Générer un nom unique
-    import uuid
     extension = file.filename.split('.')[-1]
     filename = f"{uuid.uuid4()}.{extension}"
     file_path = f"static/images/{filename}"
-    
-    # Sauvegarder le fichier
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
-    
     return {"image_url": f"/images/{filename}"}
