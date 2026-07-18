@@ -1,12 +1,11 @@
-// Récupérer l'URL de l'API
-// Avec le proxy, on utilise des chemins relatifs commençant par /api
-const API_URL = '';
+// Récupérer l'URL du backend depuis les variables d'environnement
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8001';
 
 // ========== FONCTIONS AVEC AUTH ==========
 
 export async function fetchWithAuth(endpoint, options = {}) {
   const token = localStorage.getItem('access_token');
-  
+
   const headers = {
     'Content-Type': 'application/json',
     ...options.headers
@@ -16,7 +15,7 @@ export async function fetchWithAuth(endpoint, options = {}) {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`/api${endpoint}`, {
+  const response = await fetch(`${API_URL}${endpoint}`, {
     ...options,
     headers
   });
@@ -26,7 +25,7 @@ export async function fetchWithAuth(endpoint, options = {}) {
     if (refreshed) {
       const newToken = localStorage.getItem('access_token');
       headers['Authorization'] = `Bearer ${newToken}`;
-      const retryResponse = await fetch(`/api${endpoint}`, {
+      const retryResponse = await fetch(`${API_URL}${endpoint}`, {
         ...options,
         headers
       });
@@ -49,7 +48,7 @@ export async function login(username, password) {
   formData.append('username', username);
   formData.append('password', password);
 
-  const response = await fetch('/api/login', {
+  const response = await fetch(`${API_URL}/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -74,7 +73,7 @@ export async function refreshAccessToken() {
   if (!refreshToken) return false;
 
   try {
-    const response = await fetch('/api/refresh', {
+    const response = await fetch(`${API_URL}/refresh`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -114,7 +113,7 @@ export async function deleteMessage(messageId) {
 // ========== PROJETS (CRUD) ==========
 
 export async function getProjects() {
-  const response = await fetch('/api/projects');
+  const response = await fetch(`${API_URL}/projects`);
   if (!response.ok) {
     throw new Error('Erreur lors du chargement des projets');
   }
@@ -144,7 +143,7 @@ export async function deleteProject(id) {
 // ========== CONTACT (public) ==========
 
 export async function sendContactMessage(data) {
-  const response = await fetch('/api/messages', {
+  const response = await fetch(`${API_URL}/messages`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
