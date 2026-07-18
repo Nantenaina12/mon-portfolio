@@ -1,18 +1,11 @@
-// frontend/src/components/ProjectCard.jsx
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { carto, chrono, vecteur, ndvi, occup, meteo } from '../assets/images'
-
-const images = {
-  carto: carto,
-  chrono: chrono,
-  vecteur: vecteur,
-  ndvi: ndvi,
-  occup: occup,
-  meteo: meteo
-}
 
 export default function ProjectCard({ project, index }) {
+  // Déterminer l'URL de l'image
+  // Si project.image_url existe, on l'utilise, sinon on affiche un placeholder
+  const imageUrl = project.image_url || null;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -25,9 +18,9 @@ export default function ProjectCard({ project, index }) {
       className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300"
     >
       <div className="h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-        {project.imageName && images[project.imageName] ? (
+        {imageUrl ? (
           <img 
-            src={images[project.imageName]} 
+            src={imageUrl} 
             alt={project.title}
             className="w-full h-full object-cover"
           />
@@ -40,7 +33,7 @@ export default function ProjectCard({ project, index }) {
         <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">{project.title}</h3>
         <p className="text-gray-600 dark:text-gray-300 text-sm mb-3">{project.description}</p>
         <div className="flex flex-wrap gap-2 mb-3">
-          {project.tags && project.tags.map((tag, tagIndex) => (
+          {project.tags?.map((tag, tagIndex) => (
             <span key={tagIndex} className="bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 text-xs px-2 py-1 rounded-full">
               {tag}
             </span>

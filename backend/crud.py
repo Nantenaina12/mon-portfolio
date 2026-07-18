@@ -3,7 +3,6 @@ from models import Project, Message, User
 from schemas import ProjectCreate, ProjectUpdate, MessageCreate, UserCreate
 from security import hash_password, verify_password
 import json
-import datetime
 from datetime import datetime  # <-- AJOUTER CETTE LIGNE en haut du fichier
 
 # ---- Projects ----
