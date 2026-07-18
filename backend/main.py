@@ -43,7 +43,8 @@ app.add_middleware(
         "http://localhost:3000",
         "http://localhost:8001",
         "https://nantenaina12.github.io",
-        "https://upbeat-appreciation-production-11c1.up.railway.app/"
+        "https://upbeat-appreciation-production-11c1.up.railway.app/",
+        "https://mon-portfolio-production-f5ba.up.railway.app/"
     ],
     allow_credentials=True,
     allow_methods=["*"],
