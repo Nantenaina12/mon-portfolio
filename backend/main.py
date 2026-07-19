@@ -46,6 +46,7 @@ app.add_middleware(
         "https://upbeat-appreciation-production-11c1.up.railway.app",
         "https://mon-portfolio-production-f5ba.up.railway.app"
     ],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
