@@ -43,13 +43,14 @@ app.add_middleware(
         "http://localhost:3000",
         "http://localhost:8001",
         "https://nantenaina12.github.io",
-        "https://11c1.up.railway.app",  # Vos domaines Railway ici
-        "https://mon-portfolio-production-f5ba.up.railway.app"
+        "https://upbeat-appreciation-production-11c1.up.railway.app",# Vos domaines Railway ici
+        "https://mon-portfolio-production-f5ba.up.railway.app/"
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 # ========== 5. CRÉER LES TABLES ==========
 Base.metadata.create_all(bind=engine)
 
