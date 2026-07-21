@@ -12,8 +12,9 @@ def migrate_images():
         "vecteur": "/images/vecteur.png",
         "ndvi": "/images/ndvi.png",
         "occup": "/images/occup.png",
-        "meteo": "/images/meteo.png",
-        
+        "meteo": "/images/meteo.jpg",
+        "nyrc" : '/images/nyrc.jpg'
+
     }
     
     projects = db.query(Project).all()
