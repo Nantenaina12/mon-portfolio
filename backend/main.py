@@ -43,7 +43,7 @@ app.add_middleware(
         "http://localhost:3000",
         "http://localhost:8001",
         "https://nantenaina12.github.io",
-        "https://andrinantenainaalidaorlando.up.railway.app/",# Vos domaines Railway ici
+        "https://andrinantenainaalidaorlando.up.railway.app",# Vos domaines Railway ici
         "https://mon-portfolio-production-f5ba.up.railway.app/"
     ],
     allow_credentials=True,
